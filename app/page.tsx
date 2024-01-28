@@ -26,6 +26,7 @@ export default async function Home() {
       </p>
       <h3
         className='
+          dark:text-white
           text-[#0c062c]
           text-xl
           mb-8
@@ -51,6 +52,7 @@ export default async function Home() {
             text-xs 
             text-gray-700
             mt-2
+            dark:text-gray-300
           '
         >No credit card needed</p>
       </div>
