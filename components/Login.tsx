@@ -1,8 +1,11 @@
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
-
+import { useSession } from "next-auth/react"
 
 const Login = () => {
+
+  const { data: session, status } = useSession()  
+
   return (
     <div
       className="flex flex-col justify-center items-center w-full h-screen bg-gray-100"

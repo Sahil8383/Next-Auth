@@ -1,9 +1,27 @@
-import Navbar from "@/components/Navbar";
-import Image from "next/image";
+import { getServerSession } from "next-auth";
+import { options } from "./api/auth/[...nextauth]/options";
 
-export default function Home() {
+export default async function Home() {
+
+  const session = await getServerSession(options)
+
   return (
-    <div  >
+    <div>
+        <h1>
+          Welcome {
+            session ? (
+              <div>
+                <span>{session?.user?.name}</span>
+              </div>
+            ) : (
+              <div>
+                <span>
+                  Login to continue
+                </span>
+              </div>
+            )
+          }
+        </h1>
     </div>
   );
 }
