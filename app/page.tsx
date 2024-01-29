@@ -10,7 +10,7 @@ export default async function Home() {
       className='
       flex flex-col justify-center items-center
       bg-hero-pattern bg-cover bg-center
-      text-center h-[500px]       
+      text-center h-[550px]       
     '
     >
       <p
