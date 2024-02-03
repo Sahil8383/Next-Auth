@@ -10,7 +10,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <AuthProvider>
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="light"
           enableSystem
           disableTransitionOnChange
         >

@@ -1,15 +1,26 @@
+"use client";
 import Link from "next/link"
 import { getServerSession } from "next-auth"
 import { options } from "@/app/api/auth/[...nextauth]/options"
-import { Button } from "./ui/button"
+import { Dialog } from "@headlessui/react"
 import {
     Avatar,
     AvatarFallback,
     AvatarImage,
 } from "@/components/ui/avatar"
-import { ModeToggle } from '@/components/mode-toggle'
+import { useState } from "react"
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/20/solid"
+
+
+const navigation = [
+    { name: 'Product', href: '#' },
+    { name: 'Features', href: '#' },
+    { name: 'Marketplace', href: '#' },
+    { name: 'Company', href: '#' },
+]
 
 const Navbar = async () => {
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
     const session = await getServerSession(options)
 
@@ -21,24 +32,42 @@ const Navbar = async () => {
 
     return (
         <>
-            <div className="flex flex-wrap flex-col md:flex-row justify-between items-center px-4 py-2 md:px-20 md:py-4 w-full h-20">
-                <div className="flex justify-between items-center w-full md:w-auto mb-2 md:mb-0">
-                    <h1 className='text-2xl font-bold'>HeyGen</h1>
+            <nav className="flex items-center justify-between p-6 lg:px-8" aria-label="Global">
+                <div className="flex lg:flex-1">
+                    <a href="#" className="-m-1.5 p-1.5">
+                        <span className="sr-only">Your Company</span>
+                        <img
+                            className="h-4 w-auto"
+                            src="/vercel.svg"
+                            alt="Logo"
+                        />
+                    </a>
                 </div>
-
-                <div className="md:flex md:flex-row md:items-center w-full md:w-auto">
-                    <ul className='flex flex-row justify-around items-center md:justify-between md:space-x-4 w-full md:w-auto'>
-                        <li className='dark:text-white text-md font-semibold text-gray-700 hover:text-blue-600 cursor-pointer'>Features</li>
-                        <li className='dark:text-white text-md font-semibold text-gray-700 hover:text-blue-600 cursor-pointer'>Pricing</li>
-                        <li className='dark:text-white text-md font-semibold text-gray-700 hover:text-blue-600 cursor-pointer'>Resources</li>
-                        <li className='dark:text-white text-md font-semibold text-gray-700 hover:text-blue-600 cursor-pointer'>Blog</li>
-                    </ul>
+                <div className="flex lg:hidden">
+                    <button
+                        type="button"
+                        className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
+                        style={{ zIndex: 1000 }}
+                        onClick={() => {
+                            setMobileMenuOpen(true)
+                            console.log('clicked')
+                        }}
+                    >
+                        <span className="sr-only">Open main menu</span>
+                        <Bars3Icon className="h-6 w-6" aria-hidden="true" />
+                    </button>
                 </div>
-
-                <div className='flex flex-row justify-around items-center w-full md:w-auto'>
+                <div className="hidden lg:flex lg:gap-x-12">
+                    {navigation.map((item) => (
+                        <a key={item.name} href={item.href} className="text-sm font-semibold leading-6 text-gray-900 dark:text-white">
+                            {item.name}
+                        </a>
+                    ))}
+                </div>
+                <div className="hidden lg:flex lg:flex-1 lg:justify-end">
                     {
                         session ? (
-                            <div className='flex flex-row justify-around gap-4'>
+                            <div className="flex items-center gap-4">
                                 <Avatar>
                                     <AvatarImage
                                         src={session?.user?.image as string}
@@ -48,40 +77,64 @@ const Navbar = async () => {
                                         {getInitials(session?.user?.name as string)}
                                     </AvatarFallback>
                                 </Avatar>
-
-                                <Button
-                                    className='hover:text-blue-600'
-                                    variant={'ghost'}
-                                >
-                                    <Link href={`api/auth/signout`}>
-                                        Sign Out
-                                    </Link>
-                                </Button>
+                                <Link href="/api/auth/signout" className="text-sm font-semibold leading-6 text-gray-900 dark:text-white">
+                                    Sign Out <span aria-hidden="true">&rarr;</span>
+                                </Link>
                             </div>
                         ) : (
-                            <div className='flex flex-row justify-around items-center gap-4'>
-                                <Link href='api/auth/signin'>
-                                    <Button
-                                        className='hover:text-blue-600'
-                                        variant={'ghost'}
-                                    >
-                                        Login In
-                                    </Button>
-                                </Link>
-                                <Link href='/signup'>
-                                    <Button
-                                        className='hover:text-blue-600'
-                                        variant={'outline'}
-                                    >
-                                        Sign Up
-                                    </Button>
-                                </Link>
-                            </div>
+                            <Link href="/api/auth/signin" className="text-sm font-semibold leading-6 text-gray-900 dark:text-white">
+                                Log in <span aria-hidden="true">&rarr;</span>
+                            </Link>
                         )
                     }
                 </div>
-            </div>
+            </nav>
 
+            <Dialog as="div" className="lg:hidden" open={mobileMenuOpen} onClose={setMobileMenuOpen}>
+                <Dialog.Panel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
+                    <div className="flex items-center justify-between">
+                        <a href="#" className="-m-1.5 p-1.5">
+                            <span className="sr-only">Your Company</span>
+                            <img
+                                className="h-8 w-auto"
+                                src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+                                alt=""
+                            />
+                        </a>
+                        <button
+                            type="button"
+                            className="-m-2.5 rounded-md p-2.5 text-gray-700"
+                            onClick={() => setMobileMenuOpen(false)}
+                        >
+                            <span className="sr-only">Close menu</span>
+                            <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+                        </button>
+                    </div>
+                    <div className="mt-6 flow-root">
+                        <div className="-my-6 divide-y divide-gray-500/10">
+                            <div className="space-y-2 py-6">
+                                {navigation.map((item) => (
+                                    <a
+                                        key={item.name}
+                                        href={item.href}
+                                        className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                                    >
+                                        {item.name}
+                                    </a>
+                                ))}
+                            </div>
+                            <div className="py-6">
+                                <a
+                                    href="#"
+                                    className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                                >
+                                    Log in
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </Dialog.Panel>
+            </Dialog>
         </>
     )
 }
