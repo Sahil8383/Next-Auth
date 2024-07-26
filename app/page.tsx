@@ -9,6 +9,7 @@ export default async function Home() {
     <div
       className="w-full"
     >
+      <h1>Test commit</h1>
       <div
         className='
       flex flex-col justify-center items-center
